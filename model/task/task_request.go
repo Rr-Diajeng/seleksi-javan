@@ -9,9 +9,9 @@ type (
 	}
 
 	TaskUpdateRequest struct {
-		Title       *string `json:"title" binding:"required"`
-		Description *string `json:"description" binding:"required"`
-		AssignedID  *uint   `json:"assigned_id" binding:"required"`
-		Status      *string `json:"status" binding:"required,oneof=pending in_progress completed"`
+		Title       *string `json:"title" binding:"omitempty"`
+		Description *string `json:"description" binding:"omitempty"`
+		AssignedID  *uint   `json:"assigned_id" binding:"omitempty"`
+		Status      *string `json:"status" binding:"omitempty,oneof=pending in_progress completed"`
 	}
 )

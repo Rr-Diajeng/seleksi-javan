@@ -26,7 +26,8 @@ func NewUserHandler(userUsecase ucuser.UserUsecase) *UserHandler {
 
 func (uh *UserHandler) Register(c *gin.Context) {
 	var registerReq user.RegisterRequest
-	if err := c.ShouldBindJSON(&registerReq); err != nil {
+	err := c.ShouldBindJSON(&registerReq)
+	if err != nil {
 		var ve validator.ValidationErrors
 		if errors.As(err, &ve) {
 			out := make([]string, len(ve))
@@ -74,7 +75,8 @@ func (uh *UserHandler) Register(c *gin.Context) {
 
 func (uh *UserHandler) Login(c *gin.Context) {
 	loginReq := user.LoginRequest{}
-	if err := c.ShouldBindJSON(&loginReq); err != nil {
+	err := c.ShouldBindJSON(&loginReq)
+	if err != nil {
 		var ve validator.ValidationErrors
 		if errors.As(err, &ve) {
 			out := make([]string, len(ve))
@@ -144,7 +146,8 @@ func (uh *UserHandler) ChangePassword(c *gin.Context) {
 	}
 
 	var changePasswordRequest user.ChangePasswordRequest
-	if err := c.ShouldBindJSON(&changePasswordRequest); err != nil {
+	err = c.ShouldBindJSON(&changePasswordRequest)
+	if err != nil {
 		var ve validator.ValidationErrors
 		if errors.As(err, &ve) {
 			out := make([]string, len(ve))

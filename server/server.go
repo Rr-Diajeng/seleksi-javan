@@ -6,6 +6,7 @@ import (
 	"seleksi-javan/handler"
 	"seleksi-javan/middleware"
 	"seleksi-javan/repository"
+	uctask "seleksi-javan/usecase/uc_task"
 	ucuser "seleksi-javan/usecase/uc_user"
 
 	"github.com/gin-contrib/cors"
@@ -31,8 +32,8 @@ func Start() *gin.Engine {
 	userRepository := repository.NewUserRepository(db)
 	userUsecase := ucuser.NewUserUsecase(userRepository)
 
-	// taskRepository := repository.NewTaskRepository(db)
-	// taskUsecase := uctask.NewTaskUsecase(taskRepository, userRepository)
+	taskRepository := repository.NewTaskRepository(db)
+	taskUsecase := uctask.NewTaskUsecase(taskRepository, userRepository)
 
 	//initialize auth
 	authMiddleware := middleware.NewAuthMiddleware(userUsecase)
@@ -40,6 +41,9 @@ func Start() *gin.Engine {
 	//initialize handler
 	userHandler := handler.NewUserHandler(userUsecase)
 	userHandler.Route(r, authMiddleware)
+
+	taskHandler := handler.NewTaskHandler(taskUsecase)
+	taskHandler.Route(r, authMiddleware)
 
 	return r
 }
