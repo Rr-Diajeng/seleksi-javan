@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"fmt"
 	"seleksi-javan/model"
 
 	"gorm.io/gorm"
@@ -88,9 +89,17 @@ func (ur *userRepository) ChangePassword(userId uint, newPassword string) error 
 }
 
 func (ur *userRepository) UpdateUser(userId uint, updateUser model.User) error {
-	err := ur.db.Model(&model.User{}).Where("id = ?", userId).Updates(updateUser).Error
+	tx := ur.db.Model(&model.User{}).Where("id = ?", userId).Updates(updateUser)
 
-	return err
+	if tx.Error != nil {
+		return tx.Error
+	}
+
+	if tx.RowsAffected == 0 {
+		return fmt.Errorf("user with id %d not found", userId)
+	}
+
+	return nil
 }
 
 func (ur *userRepository) DeleteUser(userId uint) error {
