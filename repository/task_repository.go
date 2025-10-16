@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"fmt"
 	"seleksi-javan/model"
 
 	"gorm.io/gorm"
@@ -47,9 +48,17 @@ func (tr *taskRepository) GetAllTask() ([]model.Task, error) {
 }
 
 func (tr *taskRepository) UpdateTask(taskId uint, updateTask model.Task) error {
-	err := tr.db.Model(&model.Task{}).Where("id = ?", taskId).Updates(updateTask).Error
+	tx := tr.db.Model(&model.Task{}).Where("id = ?", taskId).Updates(updateTask)
 
-	return err
+	if tx.Error != nil {
+		return tx.Error
+	}
+
+	if tx.RowsAffected == 0 {
+		return fmt.Errorf("task with id %d not found", taskId)
+	}
+
+	return nil
 }
 
 func (tr *taskRepository) DeleteTask(taskId uint) error {
